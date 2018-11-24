@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="css/main.css" />
   <link rel="stylesheet" href="animate.min.css">
   <script src="anime.min.js"></script>
+  <script src="https://unpkg.com/scroll-out/dist/scroll-out.min.js"></script>
 </head>
 <body>
   <!-- <div class="bg home" id="bg"> -->
@@ -47,7 +48,7 @@
     </div>
     <div class="cue"><a href=""><strong>Click before<br> it drips!</strong></a></div>
   </section>
-    <section class="flavours target1">
+  <section class="flavours target1">
       <svg id="smorph" height="100%" width="100%"  viewBox="0 0 1920 1080" preserveAspectRatio="none"><path class="smorph" d="M0,3510v651.7s240.566,214.315,365.767,164.273,271.355-22.069,393.723,0,196.733,67.173,327.881,61.978,119-71.038,300.788-118.267,178.618,24.388,334.346,0,199.738-196.067,199.738-196.067V3510Z" transform="translate(0 -3700.5)" fill="white"/></svg>
       <div class="content-container">
         <h2>Best flavours on the island</h2>
@@ -57,8 +58,8 @@
         <p><span id="kahlua-latte">Kahlua Latte</span><span id="mango-sorbet">Mango Sorbet</span></p>
         <a href="">view menu</a>
       </div>
-    </section>
-    <section class="location target2">
+  </section>
+  <section class="location target2">
       <h2>Find your nearest island</h2>
       <div class="places">
         <div class="place">
@@ -98,8 +99,9 @@
           </div>
         </div>
       </div>
-    </section>
-    <section class="gallery target3">
+      <svg id="smorph" height="100%" width="100%"  viewBox="0 0 1920 1080" preserveAspectRatio="none"><path class="a" d="M0,5760V5552.9s156.095,82.648,293.208,59.844,402.68,32.059,516.863,65.006,106.584,61.7,288.245,53.415,272.849-133.925,438.4-86.542,389.784-1.775,390.219-193.28,0,308.653,0,308.653Z" transform="translate(0 -5215.662)" fill="white"/></svg>
+  </section>
+  <section class="gallery target3">
       <h2>It's an Ice cream Social!</h2>
       <p>@islandcreamery</p>
       <div class="gallery-image">
@@ -116,46 +118,28 @@
           <img src="https://via.placeholder.com/300x300">
         </div>
       </div>
-    </section>
-    <!-- <section class="card" id="card">
-      <ul>
-        <li>
-          <span>
-
-          </span>
-          <strong>How may I help you bro?</strong>
-        </li>
-        <li>
-          <span>
-
-          </span>
-          <strong>I don't know if I can be helped.</strong>
-        </li>
-        <li>
-          <span>
-
-          </span>
-          <strong>That's deep. Let me help.</strong>
-        </li>
-      </ul>
-    </section>
-    <section class="primary" id="primary">
-        <h1>Your Personal Assistant.</h1>
-        <p>Get help with your daily life stuff.</p>
-        <a href="">Get help already.</a>
-    </section> -->
+  </section>
   <footer class="footer dark">
-    <div class="footer-links">
-      <a href="">Jobs</a>
-      <a href="">Contact</a>
-      <a href="">FAQs</a>
+    <svg id="scoop" height="100%" width="100%"  viewBox="0 0 1920 1080" preserveAspectRatio="none"><path class="scoop" d="M432.8,6930s12.51-99.936,141.327-238.245,573.646-217.46,688.987-173.7,257.876,140.645,301.527,272.161S1592.132,6930,1592.132,6930" transform="translate(-100 -5800.983)" fill="#D53940"/></svg>
+    <div class="content">
+      <div class="footer-links">
+        <a href="">Jobs</a>
+        <a href="">Contact</a>
+        <a href="">FAQs</a>
+      </div>
+      <p>©2018 Island Creamery. Built by Sunny Side Up</p>
     </div>
-    <p>©2018 Island Creamery. Built by Sunny Side Up</p>
   </footer>
   <script src='sticky.js'></script>
   <script type="module">
     import jump from './node_modules/jump.js/dist/jump.module.js';
     var overlay = document.getElementById('smorph'); 
+    var one; 
+    var two; 
+    var three;
+    clearTimeout(one);
+    clearTimeout(three);
+    clearTimeout(two);
 
     var morphing = anime({ 
       targets: '.smorph', 
@@ -165,30 +149,110 @@
       // delay: function () {}, 
       duration: 5000, 
       loop: false, 
-      autoplay: true, 
+      // autoplay: true, 
     });
 
-    enterView({
-      selector: '.flavours', 
-      enter: function(el) {
-        jump('.target1', {
-          duration: 2000, 
-          offset: 0, 
-          callback: () => {
-            console.log('Scroll completed.');
+    ScrollOut({
+      targets: '.flavours', 
+      threshold: 0.1, 
+      onShown: function(element, ctx, scrollingElement) {
+        clearTimeout(one);
+        clearTimeout(two);
+        clearTimeout(three);
+        window.addEventListener('scroll', () => {
+          var startingPoint = ctx.elementHeight;
+          var isStart = (window.scrollY-startingPoint/2)/startingPoint > 0 ;
+          if (isStart) {
+            morphing.seek(morphing.duration * window.scrollY/startingPoint);
           }
         });
-        morphing.restart();
-        overlay.classList.add('pointer');
-        // sect2.classList.add('animated', 'display', 'flipInY', 'delay-5s');
+
+        one = setTimeout(() => {
+          jump('.target1', {
+            duration: 1000, 
+            offset: -400, 
+            once: false,
+            callback: () => {
+              console.log('Scroll completed.');
+            }
+          });
+        }, 500);
       }, 
-      exit: function(el) {
-        el.classList.add('exited');
-        el.classList.remove('entered');
+      onHidden: function (element, ctx, scrollingElement) {
+        clearTimeout(one);
+        clearTimeout(two);
+        clearTimeout(three);
+      }
+    });
+
+    ScrollOut({
+      targets: '.location', 
+      threshold: 0.01, 
+      onShown: function(element, ctx, scrollingElement) {
+
+        // window.addEventListener('scroll', () => {
+        //   var startingPoint = ctx.elementHeight;
+        //   var isStart = (window.scrollY-startingPoint/2)/startingPoint > 0 ;
+        //   if (isStart) {
+        //     morphing.seek(morphing.duration * window.scrollY/startingPoint);
+        //   }
+        // });
+        clearTimeout(one);
+        clearTimeout(two);
+        clearTimeout(three);
+
+        two = setTimeout(() => {
+          jump('.target2', {
+            duration: 1000, 
+            offset: -300, 
+            once: false,
+            callback: () => {
+              console.log('Scroll completed.');
+            }
+          });
+        }, 500);
       }, 
-      offset: 0.8, 
-      once: false,
-    }); 
+      onHidden: function (element, ctx, scrollingElement) {
+        clearTimeout(one);
+        clearTimeout(two);
+        clearTimeout(three);
+      }
+    });
+
+    ScrollOut({
+      targets: '.gallery', 
+      threshold: 0.15, 
+      onShown: function(element, ctx, scrollingElement) {
+        console.log('shown');
+
+        // window.addEventListener('scroll', () => {
+        //   var startingPoint = ctx.elementHeight;
+        //   var isStart = (window.scrollY-startingPoint/2)/startingPoint > 0 ;
+        //   if (isStart) {
+        //     morphing.seek(morphing.duration * window.scrollY/startingPoint);
+        //   }
+        // });
+        clearTimeout(one);
+        clearTimeout(two);
+        clearTimeout(three);
+
+        three = setTimeout(() => {
+          jump('.footer', {
+            duration: 1000, 
+            once: false,
+            callback: () => {
+              console.log('Scroll completed.');
+            }
+          });
+        }, 500);
+      }, 
+      onHidden: function (element, ctx, scrollingElement) {
+        clearTimeout(one);
+        clearTimeout(two);
+        clearTimeout(three);
+      }
+    });
+
   </script>
 </body>
 </html>
